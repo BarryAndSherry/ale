@@ -96,7 +96,7 @@ function! ale#c#ParseCFlags(path_prefix, cflag_line) abort
         endif
 
         " Check if there was spaces after -D/-I and the flag should not have been splitted
-        if l:option is# '-D' || l:option is# '-I'
+        if l:option is# '-D' || l:option is# '-I' || l:option is# '-isystem'
             let l:previous_options = l:option
             continue
         endif
@@ -116,7 +116,9 @@ function! ale#c#ParseCFlags(path_prefix, cflag_line) abort
 
         " Parse the cflag
         if stridx(l:option, '-I') >= 0 ||
-           \ stridx(l:option, '-D') >= 0
+           \ stridx(l:option, '-D') >= 0 ||
+           \ stridx(l:option, '-fPIC') >= 0 ||
+           \ stridx(l:option, '-isystem') >= 0
             if index(l:cflags_list, l:option) < 0
                 call add(l:cflags_list, l:option)
             endif
@@ -275,6 +277,9 @@ function! ale#c#GetCFlags(buffer, output) abort
     if l:cflags is# ' '
         let l:cflags = ale#c#IncludeOptions(ale#c#FindLocalHeaderPaths(a:buffer))
     endif
+
+    " -- for debug use: print the res of cflags
+    " echom l:cflags
 
     return l:cflags
 endfunction
