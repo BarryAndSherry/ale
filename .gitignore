@@ -7,3 +7,5 @@
 /init.vim
 /test/ale-info-test-file
 tags
+*.exvim
+*.exvim.*
